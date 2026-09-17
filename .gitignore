@@ -216,3 +216,54 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ==========================================
+# Local RAG Data & Vector Indexes
+# ==========================================
+# Ignore raw BIS PDFs and processed text chunks to save repo space
+/data/raw_documents/
+/data/processed_chunks/
+# Ignore locally saved FAISS vector indexes
+*.faiss
+*.index
+
+# ==========================================
+# React / Frontend Web
+# ==========================================
+node_modules/
+/frontend-web/build/
+/frontend-web/dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+.eslintcache
+
+# ==========================================
+# Flutter / Frontend Mobile
+# ==========================================
+.dart_tool/
+/frontend-mobile/build/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.packages
+
+# ==========================================
+# OS Generated Files
+# ==========================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+ehthumbs_vista.db
+[Tt]humbs.db
+Zone.Identifier
+
+# ==========================================
+# Ensure IDEs are ignored (if not uncommented above)
+# ==========================================
+.vscode/
+.idea/
