@@ -23,7 +23,7 @@ function Home() {
 
     try {
       // 2. Fetch from your running FastAPI backend
-      const response = await fetch("http://localhost:8000/api/v1/chat", {
+     const response = await fetch("https://ai-powered-assistant-for-bis-service-api.onrender.com/api/v1/chat", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -59,7 +59,7 @@ function Home() {
         {
           id: Date.now() + 1,
           type: "assistant",
-          text: "I couldn't connect to the backend. Please ensure the FastAPI server is running on localhost:8000.",
+          text: "I couldn't connect to the backend. Please Try again in a moment.",
           sources: [],
         },
       ]);
