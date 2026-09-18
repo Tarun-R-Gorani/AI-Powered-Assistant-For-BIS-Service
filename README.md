@@ -1,87 +1,154 @@
-# AI-Powered-Assistant-For-BIS-Service
+# AI-Powered Assistant for BIS Services
 
-An AI-powered assistant designed to help users interact with and retrieve information from Bureau of Indian Standards (BIS) documents and standards.
+An AI-powered conversational assistant designed to help users understand and retrieve information from **Bureau of Indian Standards (BIS)** documents and standards.
 
-The project aims to provide users with a simple conversational interface where they can ask questions about BIS standards and receive relevant, source-grounded answers.
+The system combines **Retrieval-Augmented Generation (RAG)** with a conversational React interface to provide users with simple, relevant, and source-grounded answers from the BIS knowledge base.
 
 ---
 
 ## 🚀 Project Overview
 
-BIS documents can be extensive and difficult to navigate manually. The BIS AI Assistant is designed to simplify this process by combining:
+BIS standards and technical documents can be extensive and difficult to navigate manually.
+
+The **BIS AI Assistant** simplifies this process by allowing users to ask questions in natural language and receive relevant answers grounded in retrieved BIS documents.
+
+### Key Capabilities
 
 - 🤖 AI-powered question answering
 - 📚 BIS standards knowledge base
 - 🔎 Retrieval-Augmented Generation (RAG)
+- 🧠 Semantic document retrieval
 - 💬 Conversational chat interface
-- 📌 Source/reference-based answers
-
-The current version contains a **frontend prototype and prototype knowledge-base flow**. The backend RAG pipeline and LLM integration will be connected as the next development stage.
+- 📌 Source-grounded responses
+- 📖 Retrieved BIS source references
+- ✨ Structured and readable AI responses
+- 📱 Responsive user interface
 
 ---
 
 ## ✨ Features
 
-### Current Prototype
+### 💬 Conversational BIS Assistant
 
-- Modern conversational chat interface
-- Example questions for users
-- BIS-focused question answering
-- Source/reference cards
-- Responsive frontend
-- Component-based React architecture
-- Prototype knowledge-base integration
+Users can ask questions about BIS standards using natural language.
 
-### Planned
+Example:
 
-- BIS document ingestion
-- Document chunking and preprocessing
-- Embedding generation
-- Vector database integration
-- Semantic retrieval
-- LLM API integration
-- RAG-based grounded responses
-- BIS document/source citations
-- Improved hallucination prevention
+> What about National Flag of India?
+
+The assistant retrieves relevant information from the BIS knowledge base and generates a grounded response.
 
 ---
 
-## 🏗️ Architecture
+### 🔎 Retrieval-Augmented Generation
 
-The planned system follows this workflow:
+The system follows a RAG-based workflow:
+
+1. User submits a question.
+2. The question is converted into an embedding.
+3. Relevant BIS document chunks are retrieved from the vector index.
+4. Retrieved context is provided to the language model.
+5. The model generates an answer based on the retrieved information.
+6. Relevant BIS sources are displayed alongside the response.
+
+This helps reduce unsupported or hallucinated answers.
+
+---
+
+### 📚 Source-Grounded Answers
+
+Each AI response can include the BIS documents or standards retrieved during the search.
+
+The interface displays:
+
+- BIS Standard ID
+- Document title / description
+- Retrieved source information
+
+This allows users to verify the information used to generate the answer.
+
+---
+
+### ✨ Structured Response Formatting
+
+AI responses are presented using:
+
+- Clear headings
+- Bullet points
+- Highlighted BIS standard references
+- Readable spacing
+- Source sections
+- Copy-answer functionality
+
+This makes technical BIS information easier to understand.
+
+---
+
+### 🖥️ Modern React Interface
+
+The frontend provides:
+
+- Clean conversational UI
+- Example questions
+- Responsive layout
+- User and assistant message bubbles
+- BIS source cards
+- Copy response functionality
+- Loading/error handling
+- Mobile-friendly design
+
+---
+
+## 🏗️ System Architecture
 
 ```text
-                  ┌─────────────────┐
-                  │      User       │
-                  └────────┬────────┘
-                           │
-                           ▼
-                  ┌─────────────────┐
-                  │  React Frontend │
-                  └────────┬────────┘
-                           │
-                           ▼
-                  ┌─────────────────┐
-                  │  Backend API    │
-                  └────────┬────────┘
-                           │
-                           ▼
-                  ┌─────────────────┐
-                  │ RAG Retrieval   │
-                  └────────┬────────┘
-                           │
-                           ▼
-                  ┌─────────────────┐
-                  │ BIS Documents   │
-                  │ / Knowledge Base│
-                  └────────┬────────┘
-                           │
-                           ▼
-                  ┌─────────────────┐
-                  │      LLM        │
-                  └────────┬────────┘
-                           │
-                           ▼
-              ┌─────────────────────────┐
-              │ Grounded Answer + Source│
-              └─────────────────────────┘
+                    ┌─────────────────────┐
+                    │        User         │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │   React Frontend    │
+                    │  Conversational UI  │
+                    └──────────┬──────────┘
+                               │
+                               │ HTTP POST
+                               ▼
+                    ┌─────────────────────┐
+                    │    FastAPI Backend  │
+                    │     REST API        │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │  Query Processing   │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │   Embedding Model   │
+                    │ Semantic Retrieval  │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │   FAISS Vector      │
+                    │       Index         │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │ Relevant BIS        │
+                    │ Document Chunks     │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │       LLM           │
+                    │ Grounded Generation │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+              ┌─────────────────────────────────┐
+              │   Answer + Retrieved Sources    │
+              └─────────────────────────────────┘
