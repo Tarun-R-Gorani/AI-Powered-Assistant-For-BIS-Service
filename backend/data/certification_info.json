@@ -1,0 +1,26 @@
+{
+    "schemes": [
+        {
+            "scheme_name": "Hallmarking Scheme",
+            "applicability": "Gold and Silver Jewellery / Artefacts",
+            "description": "Hallmarking is the accurate determination and official recording of the proportionate content of precious metal in precious metal articles. Hallmarks are thus official marks used in many countries as a guarantee of purity or fineness of precious metal articles. The principle objectives of the Hallmarking Scheme are to protect the public against adulteration and to obligate manufacturers to maintain legal standards of fineness. In India, at present two precious metals namely gold and silver have been brought under the purview of Hallmarking. Procedure For Obtaining Registration by Jeweller for Sale of Hallmarked Jeweller / Artefacrs",
+            "steps": [
+                "Apply online in the BIS portal (www.manakonline.in).",
+                "Certificate of registration is granted instantly.",
+                "Get jewellery tested from any BIS Recognized Assaying & Hallmarking Centre."
+            ]
+        },
+        {
+            "scheme_name": "Product Certification (ISI Mark / CRS)",
+            "applicability": "Mandatory and Voluntary Products",
+            "description": "Indian Standards Institution (ISI) was established on 6 January 1947 as a Registered Society under the Societies Registration Act, 1860. Being the National Standards Body of India, the organization had a clear mandate of preparing and promoting Standards for adoption by Indian Industry. BIS certification scheme is basically voluntary in nature. However, for a number of products compliance to Indian Standards is made compulsory by the Central Government under various considerations viz. public interest, protection of human, animal or plant health, safety of environment, prevention of unfair trade practices and national security. For such products, the Central Government directs mandatory use of Standard Mark under a Licence or Certificate of Conformity (CoC) from BIS through issuance of QCOs.",
+            "steps": [
+                "Identify the Applicable Indian Standard (IS).",
+                "Ensure manufacturing infrastructure and testing equipment meet guidelines.",
+                "Submit application and product sample for testing.",
+                "Undergo factory inspection by BIS officials.",
+                "Grant of Licence (GoL) upon successful verification."
+            ]
+        }
+    ]
+}
