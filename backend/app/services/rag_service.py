@@ -10,118 +10,136 @@ from app.models.schemas import Citation, QueryResponse
 class RAGService:
 
     def __init__(self):
+        self.retriever = get_vector_store()
 
-        # Lightweight BIS retrieval
-        self.vector_store = get_vector_store()
-
-        self.retriever = self.vector_store
-
-        # Groq LLM
         self.llm = ChatGroq(
             api_key=settings.GROQ_API_KEY,
             model_name=settings.LLM_MODEL,
-            temperature=0.1
+            temperature=0.1,
         )
 
-        # Prompt for clear, grounded answers
         self.prompt = ChatPromptTemplate.from_messages([
             (
                 "system",
-                """You are the BIS Smart Assistant.
+                """
+You are the BIS Smart Assistant.
 
-Answer the user's question using ONLY the provided BIS context.
+Your job is to answer questions about Bureau of Indian Standards (BIS)
+using ONLY the retrieved context provided below.
 
-Rules:
-- Give a clear and concise answer.
-- Use bullet points when explaining multiple facts.
-- Mention BIS Standard numbers when available.
-- Do not invent information.
-- If the context does not contain enough information, clearly say so.
-- Keep the answer easy to understand.
+IMPORTANT RULES:
 
-Context:
+1. Do not invent information.
+2. If the answer is not present in the context, clearly say:
+   "I could not find this information in the available BIS knowledge base."
+3. Give a direct answer first.
+4. Make the answer easy to read.
+5. Use Markdown formatting.
+6. Use bullet points for multiple facts.
+7. Use numbered steps when explaining a procedure.
+8. Mention BIS Standard numbers whenever available.
+9. Mention the standard title whenever available.
+10. Keep the answer concise but useful.
+11. Do not dump the entire retrieved document.
+12. Do not repeat the question unnecessarily.
+
+Preferred answer format:
+
+**[Short descriptive heading]**
+
+- **Standard:** IS XXXX
+- **Title:** Standard title
+- **Purpose:** Brief explanation
+- **Key requirements:**
+  - Requirement 1
+  - Requirement 2
+  - Requirement 3
+
+If the question asks about a process:
+
+**Process**
+
+1. Step one
+2. Step two
+3. Step three
+
+**Source**
+- Mention the relevant BIS standard or scheme from the context.
+
+Retrieved context:
 {context}
 """
             ),
-            (
-                "user",
-                "{question}"
-            )
+            ("user", "{question}"),
         ])
 
-        self.chain = (
-            self.prompt
-            | self.llm
-            | StrOutputParser()
-        )
+        self.chain = self.prompt | self.llm | StrOutputParser()
 
-    def process_query(
-        self,
-        user_query: str
-    ) -> QueryResponse:
+    def process_query(self, user_query: str) -> QueryResponse:
 
-        # Retrieve relevant BIS documents
-        docs = self.retriever.invoke(
-            user_query
-        )
+        docs = self.retriever.invoke(user_query)
 
-        # Build context
+        if not docs:
+            return QueryResponse(
+                answer=(
+                    "**No matching BIS information found**\n\n"
+                    "- I could not find a relevant answer in the available "
+                    "BIS knowledge base.\n"
+                    "- Try using a BIS Standard number, product name, "
+                    "certification scheme, or a more specific question."
+                ),
+                citations=[],
+                retrieved_context_count=0,
+            )
+
         context_str = "\n\n---\n\n".join(
-            [
-                doc.page_content
-                for doc in docs
-            ]
+            [doc.page_content for doc in docs]
         )
 
-        # Generate grounded answer
         answer = self.chain.invoke({
             "context": context_str,
-            "question": user_query
+            "question": user_query,
         })
 
-        # Build citations
         citations = [
             Citation(
-                source_file=doc.metadata.get(
+                source_file=d.metadata.get(
                     "source_file",
                     "unknown"
                 ),
-                doc_type=doc.metadata.get(
+                doc_type=d.metadata.get(
                     "doc_type",
                     "general"
                 ),
-                standard_id=doc.metadata.get(
+                standard_id=d.metadata.get(
                     "standard_id"
                 ),
-                title=doc.metadata.get(
+                title=d.metadata.get(
                     "title"
                 ),
-                scheme=doc.metadata.get(
+                scheme=d.metadata.get(
                     "scheme"
-                )
+                ),
             )
-            for doc in docs
+            for d in docs
         ]
 
         return QueryResponse(
             answer=answer,
             citations=citations,
-            retrieved_context_count=len(docs)
+            retrieved_context_count=len(docs),
         )
 
     def find_standards_for_product(
         self,
         product: str,
         top_k: int = 3,
-        distance_threshold: float = 1.2
+        distance_threshold: float = 0.8,
     ):
 
-        results = (
-            self.vector_store
-            .similarity_search_with_score(
-                product,
-                k=top_k
-            )
+        results = self.retriever.similarity_search_with_score(
+            product,
+            k=top_k,
         )
 
         mapped = []
@@ -129,12 +147,9 @@ Context:
         for doc, score in results:
 
             if (
-                doc.metadata.get(
-                    "doc_type"
-                ) == "standard"
+                doc.metadata.get("doc_type") == "standard"
                 and score <= distance_threshold
             ):
-
                 mapped.append({
                     "standard_id": doc.metadata.get(
                         "standard_id"
@@ -146,11 +161,10 @@ Context:
                     "distance_score": round(
                         float(score),
                         4
-                    )
+                    ),
                 })
 
         return mapped
 
 
-# Create service
 rag_service = RAGService()
