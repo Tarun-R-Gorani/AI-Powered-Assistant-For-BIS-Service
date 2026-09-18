@@ -7,35 +7,63 @@ import ExampleQuestions from "../components/ExampleQuestions";
 function Home() {
   const [messages, setMessages] = useState([]);
 
-  const handleSend = (text) => {
+  const handleSend = async (text) => {
     if (!text.trim()) return;
 
+    // 1. Add user message to UI
     const userMessage = {
       id: Date.now(),
       type: "user",
       text: text,
     };
-
     setMessages((prev) => [...prev, userMessage]);
+    
+    // Optional: Add a loading state if you have one configured
+    // setIsLoading(true);
 
-    // Temporary response.
-    // Tomorrow this will call the FastAPI + RAG backend.
-    setTimeout(() => {
+    try {
+      // 2. Fetch from your running FastAPI backend
+      const response = await fetch("http://localhost:8000/api/v1/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+        },
+        body: JSON.stringify({ query: text, language: "en" }),
+      });
+
+      if (!response.ok) throw new Error("Backend connection failed");
+      
+      const data = await response.json();
+
+      // 3. Map backend citations to match Moksha's ChatWindow prop expectations
+      const mappedSources = data.citations?.map((cite) => ({
+        title: cite.standard_id || cite.scheme || cite.source_file,
+        description: cite.title || cite.doc_type || "BIS Knowledge Base",
+      })) || [];
+
+      // 4. Add the real AI response to the UI
       setMessages((prev) => [
         ...prev,
         {
           id: Date.now() + 1,
           type: "assistant",
-          text: "I’m currently using the prototype knowledge base. The RAG backend will retrieve the relevant BIS Standard and provide a grounded answer with its source.",
-          sources: [
-            {
-              title: "BIS Standards Knowledge Base",
-              description: "Source retrieved from the BIS standards dataset.",
-            },
-          ],
+          text: data.answer,
+          sources: mappedSources,
         },
       ]);
-    }, 700);
+    } catch (error) {
+      console.error("Error connecting to backend:", error);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now() + 1,
+          type: "assistant",
+          text: "I couldn't connect to the backend. Please ensure the FastAPI server is running on localhost:8000.",
+          sources: [],
+        },
+      ]);
+    }
   };
 
   const handleExampleClick = (question) => {
