@@ -758,3 +758,112 @@ button {
   color: #2454c7;
   font-size: 16px;
 }
+/* MARKDOWN ANSWERS */
+
+.markdown-answer {
+  line-height: 1.7;
+}
+
+.markdown-answer p {
+  margin: 0 0 12px;
+}
+
+.markdown-answer p:last-child {
+  margin-bottom: 0;
+}
+
+.markdown-answer strong {
+  color: #172033;
+  font-weight: 700;
+}
+
+.markdown-answer ul,
+.markdown-answer ol {
+  margin: 8px 0 14px;
+  padding-left: 22px;
+}
+
+.markdown-answer li {
+  margin: 6px 0;
+  padding-left: 3px;
+}
+
+.markdown-answer ul li::marker {
+  color: #2354c5;
+}
+
+.markdown-answer ol li::marker {
+  color: #2354c5;
+  font-weight: 700;
+}
+
+.markdown-answer h1,
+.markdown-answer h2,
+.markdown-answer h3 {
+  margin: 4px 0 10px;
+  color: #173b9f;
+  font-weight: 700;
+}
+
+.markdown-answer h2 {
+  font-size: 16px;
+}
+
+.markdown-answer h3 {
+  font-size: 14px;
+}
+
+.markdown-answer code {
+  background: #eef2f7;
+  padding: 2px 5px;
+  border-radius: 5px;
+  font-size: 12px;
+}
+
+.markdown-answer blockquote {
+  margin: 10px 0;
+  padding: 8px 12px;
+  border-left: 3px solid #2354c5;
+  background: #f5f8ff;
+  color: #526078;
+}
+
+/* Better assistant bubble */
+
+.assistant-row .message-bubble {
+  max-width: 720px;
+  background: #ffffff;
+  border: 1px solid #e1e7f0;
+  box-shadow: 0 6px 20px rgba(23, 59, 159, 0.05);
+}
+
+/* Better source section */
+
+.sources {
+  margin-top: 14px;
+}
+
+.sources-title {
+  color: #526078;
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+/* Smooth chat appearance */
+
+.message-row {
+  animation: messageIn 0.25s ease-out;
+}
+
+@keyframes messageIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
